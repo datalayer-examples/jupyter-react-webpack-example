@@ -2,7 +2,6 @@ const webpack = require("webpack");
 // const path = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const IS_PRODUCTION = process.argv.indexOf('--mode=production') > -1;
 
@@ -14,7 +13,7 @@ const minimize = IS_PRODUCTION ? true : false;
 
 module.exports = {
   entry: ['./src/index'],
-  mode: mode,
+  mode,
   watchOptions: {
     aggregateTimeout: 300,
     poll: 2000, // Seems to stabilise HMR file change detection.
@@ -62,7 +61,7 @@ module.exports = {
   },
   output: {
     publicPath: "http://localhost:3000/",
-    filename: '[name].[contenthash].jupyter-react-example.js',
+    filename: '[name].[contenthash].jupyter-react-webpack-example.js',
   },
   resolve: {
     extensions: [ '.tsx', '.ts', 'jsx', '.js' ],
@@ -155,17 +154,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Jupyter React',
       template : 'public/index.html'
-    }),
-    new HtmlWebpackTagsPlugin({
-      links: [
-        'https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
-        'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap',
-      ],
-      tags: [
-//        'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js'
-      ],
-      append: false, 
-      publicPath: false
     }),
   ]
 };
