@@ -1,26 +1,16 @@
 const webpack = require("webpack");
-const path = require("path");
+// const path = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const IS_PRODUCTION = process.argv.indexOf('--mode=production') > -1;
-let mode = "development";
-if (IS_PRODUCTION) {
-  mode = "production";
-}
 
-let devtool = "inline-source-map";
-if (IS_PRODUCTION) {
-  devtool = false;
-}
+const mode = IS_PRODUCTION ? "production" : "development";
+const devtool = IS_PRODUCTION ? false : "inline-source-map";
+const minimize = IS_PRODUCTION ? true : false;
 
-let minimize = false;
-if (IS_PRODUCTION) {
-  minimize = true;
-}
-
-const JUPYTER_HOST = 'http://127.0.0.1:8686';
+// const JUPYTER_HOST = 'http://127.0.0.1:8686';
 
 module.exports = {
   entry: ['./src/index'],
@@ -50,6 +40,7 @@ module.exports = {
         secure: false,
         changeOrigin: true,
       },
+      /*
       '/api/jupyter': {
         target: JUPYTER_HOST,
         ws: true,
@@ -62,6 +53,7 @@ module.exports = {
         secure: false,
         changeOrigin: false,
       },
+      */
     },
   },
   devtool,
@@ -70,7 +62,7 @@ module.exports = {
   },
   output: {
     publicPath: "http://localhost:3000/",
-    filename: '[name].[contenthash].jupyterReactExample.js',
+    filename: '[name].[contenthash].jupyter-react-example.js',
   },
   resolve: {
     extensions: [ '.tsx', '.ts', 'jsx', '.js' ],
@@ -110,11 +102,13 @@ module.exports = {
         resourceQuery: /raw/,
         type: 'asset/source',
       },
+      /*
       // just keep the woff2 fonts from fontawesome
       {
         test: /fontawesome-free.*\.(svg|eot|ttf|woff)$/,
         loader: 'ignore-loader',
       },
+      */
       {
         test: /\.(jpe?g|png|gif|ico|eot|ttf|map|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
         type: 'asset/resource',
