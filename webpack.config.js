@@ -24,6 +24,9 @@ module.exports = {
     historyApiFallback: true,
     https: false,
     server: 'http',
+    client: {
+      overlay: false,
+    },
     proxy: {
       '/build/pypi': {
         target: 'https://datalayer-assets.s3.us-west-2.amazonaws.com/pypi',
@@ -144,7 +147,38 @@ module.exports = {
         resolve: {
           fullySpecified: false
         }
-      }
+      },
+      // Special webpack rule for the JupyterLab theme style sheets.
+      /*
+      {
+        test: /style\/theme\.css$/i,
+        loader: 'css-loader',
+        options: { exportType: 'string' },
+      },
+      */
+      // Ship the JupyterLite service worker.
+      {
+        resourceQuery: /text/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]',
+        },
+      },
+      // Rule for pyodide kernel
+      {
+        test: /pypi\/.*/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'pypi/[name][ext][query]',
+        },
+      },
+      {
+        test: /pyodide-kernel-extension\/schema\/.*/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'schema/[name][ext][query]',
+        },
+      },
     ]
   },
   plugins: [

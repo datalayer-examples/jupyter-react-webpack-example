@@ -47,7 +47,7 @@ export const JupyterLabHeadlessAppExample = () => {
   }
   return (
     <>
-      <Jupyter startDefaultKernel={false} disableCssLoading={true} theme="light">
+      <Jupyter startDefaultKernel={false} disableCssLoading={true}>
         { boxPanel &&
           <div style={{ position: "relative" }}>
             <Box className="jp-LabShell"
