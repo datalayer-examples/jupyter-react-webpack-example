@@ -1,5 +1,13 @@
-import { selectCell, Cell } from "@datalayer/jupyter-react";
+/*
+ * Copyright (c) 2021-2023 Datalayer, Inc.
+ *
+ * MIT License
+ */
+
+import { useCellsStore, Cell } from "@datalayer/jupyter-react";
 import CellToolbar from './CellToolbar';
+
+const CELL_ID = "cell-id-1"
 
 const SOURCE_EXAMPLE = `"""
 import ipywidgets as widgets
@@ -30,12 +38,12 @@ ax2.set_ylabel('Undamped')
 plt.show()`;
 
 const CellPreview = () => {
-  const cell = selectCell();
+  const cellStore = useCellsStore();
   return (
     <>
-      <div>source: {cell.source}</div>
+      <div>source: {cellStore.getSource(CELL_ID)}</div>
       <br/>
-      <div>kernel available: {String(cell.kernelAvailable)}</div>
+      <div>kernel available: {String(cellStore.isKernelSessionAvailable)}</div>
       <br/>
     </>
   )
@@ -44,8 +52,8 @@ const CellPreview = () => {
 const CellComponents = () => (
   <>
     <CellPreview/>
-    <CellToolbar />
-    <Cell source={SOURCE_EXAMPLE} />
+    <CellToolbar cellId={CELL_ID} />
+    <Cell id={CELL_ID} source={SOURCE_EXAMPLE} />
   </>
 )
 

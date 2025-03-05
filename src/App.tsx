@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Jupyter, Notebook, CellSidebarRun } from '@datalayer/jupyter-react';
+import { Jupyter, Notebook, CellSidebarRun, CellSidebarExtension } from '@datalayer/jupyter-react';
 import { Box } from '@primer/react';
 import { AppsIcon, CpuIcon } from '@primer/octicons-react';
 import { UnderlineNav } from '@primer/react';
@@ -45,7 +45,7 @@ const App = () => {
               <hr/>
               <Notebook
                 path="/ping.ipynb"
-                CellSidebar={CellSidebarRun}
+                extensions={[new CellSidebarExtension({ factory: CellSidebarRun })]}
               />
             </>
           }
