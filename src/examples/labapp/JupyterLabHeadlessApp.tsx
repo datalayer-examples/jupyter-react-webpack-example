@@ -47,7 +47,7 @@ export const JupyterLabHeadlessAppExample = () => {
   }
   return (
     <>
-      <Jupyter startDefaultKernel={false} disableCssLoading={true}>
+      <Jupyter startDefaultKernel={false} disableCssLoading>
         { boxPanel &&
           <div style={{ position: "relative" }}>
             <Box className="jp-LabShell"
@@ -65,15 +65,15 @@ export const JupyterLabHeadlessAppExample = () => {
           </div>
         }
         <JupyterLabApp
-          extensions={[
+          plugins={[
             lightThemeExtension,
             ipywidgetsExtension,
             plotlyExtension,
           ]}
-          mimeExtensions={[
+          mimeRenderers={[
             mimePlotlyExtension,
           ]}
-          headless={true}
+          headless
           onJupyterLab={onJupyterLab}
           pluginId="@jupyterlab/apputils-extension:themes"
           PluginType={ThemeManager}

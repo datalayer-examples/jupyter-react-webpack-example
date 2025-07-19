@@ -1,7 +1,8 @@
 const webpack = require("webpack");
-// const path = require("path");
+const path = require("path");
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 
 const IS_PRODUCTION = process.argv.indexOf('--mode=production') > -1;
 
@@ -9,7 +10,11 @@ const mode = IS_PRODUCTION ? "production" : "development";
 const devtool = IS_PRODUCTION ? false : "inline-source-map";
 const minimize = IS_PRODUCTION ? true : false;
 
-// const JUPYTER_HOST = 'http://127.0.0.1:8686';
+const shimJS = path.resolve(__dirname, 'src', 'emptyshim.js');
+
+function shim(regExp) {
+  return new webpack.NormalModuleReplacementPlugin(regExp, shimJS);
+}
 
 module.exports = {
   entry: ['./src/index'],
@@ -27,36 +32,6 @@ module.exports = {
     client: {
       overlay: false,
     },
-    proxy: {
-      '/build/pypi': {
-        target: 'https://datalayer-assets.s3.us-west-2.amazonaws.com/pypi',
-        pathRewrite: { '^/build/pypi': '' },
-        ws: false,
-        secure: false,
-        changeOrigin: true,
-      },
-      '/services.js': {
-        target: 'https://datalayer-assets.s3.us-west-2.amazonaws.com/services.js',
-        pathRewrite: { '^/services.js': '' },
-        ws: false,
-        secure: false,
-        changeOrigin: true,
-      },
-      /*
-      '/api/jupyter': {
-        target: JUPYTER_HOST,
-        ws: true,
-        secure: false,
-        changeOrigin: true,
-      },
-      '/plotly.js': {
-        target: JUPYTER_HOST + '/api/jupyter/pool/react',
-        ws: false,
-        secure: false,
-        changeOrigin: false,
-      },
-      */
-    },
   },
   devtool,
   optimization: {
@@ -67,95 +42,104 @@ module.exports = {
     filename: '[name].[contenthash].jupyter-react-webpack-example.js',
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', 'jsx', '.js' ],
-    alias: { 
-      "stream": "stream-browserify",
+    extensions: ['.tsx', '.ts', 'jsx', '.js'],
+    alias: {
+      stream: 'stream-browserify',
     },
-    fallback: { 
-      "assert": require.resolve("assert/"),
-    }
+    fallback: {
+      assert: require.resolve('assert/'),
+    },
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
         options: {
           plugins: [
-            "@babel/plugin-proposal-class-properties",
-          ],
-          presets: [
-            ["@babel/preset-react", {
-                runtime: 'automatic',
-                importSource: 'react'
+            [
+              '@babel/plugin-transform-typescript',
+              {
+                allowDeclareFields: true,
               },
             ],
-            "@babel/preset-typescript",
+            '@babel/plugin-proposal-class-properties',
           ],
-          cacheDirectory: true
+          presets: [
+            [
+              '@babel/preset-react',
+              {
+                runtime: 'automatic',
+                importSource: 'react',
+              },
+            ],
+            '@babel/preset-typescript',
+          ],
+          cacheDirectory: true,
         },
         exclude: /node_modules/,
       },
       {
-        test: /pypi\/.*/,
-        type: 'asset/resource',
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
       },
-      {
-        resourceQuery: /raw/,
-        type: 'asset/source',
-      },
-      /*
       // just keep the woff2 fonts from fontawesome
       {
         test: /fontawesome-free.*\.(svg|eot|ttf|woff)$/,
         loader: 'ignore-loader',
       },
-      */
       {
         test: /\.(jpe?g|png|gif|ico|eot|ttf|map|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
         type: 'asset/resource',
       },
-      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-      { test: /\.md$/, use: 'raw-loader' },
-      { test: /\.js.map$/, use: 'file-loader' },
+      // We must escape the JupyterLab theme style sheets to apply specific rules
+      // this is only needed in stand-alone mode
+      {
+        oneOf: [
+          {
+            resourceQuery: /raw/,
+            type: 'asset/source',
+          },
+          { test: /(?<!style\/theme)\.css$/, use: ['style-loader', 'css-loader'] },
+        ]
+      },
+      { test: /\.md$/, type: 'asset/source' },
+      { test: /\.js.map$/, type: 'asset/resource' },
       {
         // In .css files, svg is loaded as a data URI.
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         issuer: /\.css$/,
         use: {
           loader: 'svg-url-loader',
-          options: { encoding: 'none', limit: 10000 }
-        }
+          options: { encoding: 'none', limit: 10000 },
+        },
       },
       {
         // In .ts and .tsx files (both of which compile to .js), svg files
         // must be loaded as a raw string instead of data URIs.
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         issuer: /\.js$/,
-        use: {
-          loader: 'raw-loader'
-        }
+        type: 'asset/source',
       },
       {
         test: /\.m?js/,
         resolve: {
-          fullySpecified: false
-        }
+          fullySpecified: false,
+        },
       },
       {
         test: /\.c?js/,
         resolve: {
-          fullySpecified: false
-        }
+          fullySpecified: false,
+        },
       },
       // Special webpack rule for the JupyterLab theme style sheets.
-      /*
       {
         test: /style\/theme\.css$/i,
         loader: 'css-loader',
         options: { exportType: 'string' },
       },
-      */
       // Ship the JupyterLite service worker.
       {
         resourceQuery: /text/,
@@ -179,15 +163,23 @@ module.exports = {
           filename: 'schema/[name][ext][query]',
         },
       },
-    ]
+    ],
   },
   plugins: [
+    shim(/@fortawesome/),
     new webpack.ProvidePlugin({
-      process: 'process/browser'
+      process: 'process/browser',
     }),
     new HtmlWebpackPlugin({
       title: 'Jupyter React',
-      template : 'public/index.html'
+      template: 'public/index.html',
     }),
-  ]
+    new HtmlWebpackTagsPlugin({
+      links: [
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
+      ],
+      append: false,
+      publicPath: false,
+    }),
+  ],
 };

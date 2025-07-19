@@ -19,11 +19,11 @@ default: help ## default target is help
 
 clean: ## clean
 	($(CONDA_ACTIVATE) ${ENV_NAME}; \
-		yarn clean )
+		npm clean )
 
 build: ## build
 	($(CONDA_ACTIVATE) ${ENV_NAME}; \
-		yarn build )
+		npm run build )
 
 start-jupyter-server: ## start the jupyter server
 	($(CONDA_ACTIVATE) ${ENV_NAME}; \

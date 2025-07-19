@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import { useCellsStore, Cell } from "@datalayer/jupyter-react";
+import { useCellsStore, Cell, useJupyter } from "@datalayer/jupyter-react";
 import CellToolbar from './CellToolbar';
 
 const CELL_ID = "cell-id-1"
@@ -41,20 +41,27 @@ const CellPreview = () => {
   const cellStore = useCellsStore();
   return (
     <>
-      <div>source: {cellStore.getSource(CELL_ID)}</div>
+      <div>Source code: {cellStore.getSource(CELL_ID)}</div>
       <br/>
-      <div>kernel available: {String(cellStore.isKernelSessionAvailable)}</div>
+      <div>Kernel is available: {String(cellStore.isKernelSessionAvailable(CELL_ID))}</div>
       <br/>
     </>
   )
 }
 
-const CellComponents = () => (
-  <>
-    <CellPreview/>
-    <CellToolbar cellId={CELL_ID} />
-    <Cell id={CELL_ID} source={SOURCE_EXAMPLE} />
-  </>
-)
+const CellComponents = () => {
+  const { kernel } = useJupyter();
+  return (
+    <>
+      <CellPreview/>
+      <CellToolbar cellId={CELL_ID} />
+      <Cell
+        id={CELL_ID}
+        source={SOURCE_EXAMPLE}
+        kernel={kernel}
+      />
+    </>
+  ); 
+}
 
 export default CellComponents;

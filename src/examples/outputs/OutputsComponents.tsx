@@ -148,21 +148,21 @@ export const OutputsComponents = () => {
   return  <>
     <h3>Simple Output</h3>
     <Output
-      autoRun={true}
+      autoRun
       kernel={kernel}
       code={"print('Hello Datalayer 👍')"}
     />
     <h3>IPyWidget Output</h3>
     <Output
-      autoRun={true}
+      autoRun
       kernel={kernel}
       code={SOURCE_IPYWIDGET}
     />
     <h3>JSON Output</h3>
     <Output
-      outputs={OUTPUT_2}
       autoRun={false}
       kernel={kernel}
+      outputs={OUTPUT_2}
     />
   </>
 }
