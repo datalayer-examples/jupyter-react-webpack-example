@@ -1,9 +1,5 @@
-import { useMemo } from 'react';
 import { IOutput } from '@jupyterlab/nbformat';
-import { useJupyter, Kernel } from '@datalayer/jupyter-react';
-import { Output } from '@datalayer/jupyter-react/lib/components/output/Output';
-
-import "./../index.css";
+import { Kernel, Output } from '@datalayer/jupyter-react';
 
 const SOURCE_IPYWIDGET = `import ipywidgets as widgets
 widgets.IntSlider(
@@ -128,23 +124,12 @@ const OUTPUT_3 = [
   }
 ];
 */
-/**
- * A simple example for the React Editor.
- */
-export const OutputsComponents = () => {
-  const { kernelManager, serviceManager } = useJupyter();
-  const kernel = useMemo(() => {
-    if (kernelManager && serviceManager) {
-      return new Kernel({
-        kernelManager,
-        kernelName: 'python3',
-        kernelSpecName: 'python3',
-        kernelType: "notebook",
-        kernelspecsManager: serviceManager.kernelspecs,
-        sessionManager: serviceManager.sessions,
-      });
-    }
-  }, [kernelManager, serviceManager]);
+type IOutputsComponentsProps = {
+  kernel: Kernel;
+}
+
+export const OutputsComponents = (props: IOutputsComponentsProps) => {
+  const { kernel } = props;
   return  <>
     <h3>Simple Output</h3>
     <Output

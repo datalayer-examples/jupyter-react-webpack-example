@@ -10,6 +10,22 @@ import './App.css';
 
 const JupyterApp = () => {
   const [tab, setTab] = useState(0);
+  const { kernel } = useJupyter({ startDefaultKernel: true  });
+  /*
+  const { kernelManager, serviceManager } = useJupyter();
+  const kernel1 = useMemo(() => {
+    if (kernelManager && serviceManager) {
+      return new Kernel({
+        kernelManager,
+        kernelName: 'python3',
+        kernelSpecName: 'python3',
+        kernelType: "notebook",
+        kernelspecsManager: serviceManager.kernelspecs,
+        sessionManager: serviceManager.sessions,
+      });
+    }
+  }, [kernelManager, serviceManager]);
+  */
   return (
     <>
       <UnderlineNav aria-label='gallery'>
@@ -21,35 +37,61 @@ const JupyterApp = () => {
             setTab(0);
           }}
         >
-          Examples
+          Notebook
         </UnderlineNav.Item>
         <UnderlineNav.Item
-          icon={AppsIcon}
+          icon={CpuIcon}
           aria-current={tab === 1 ? "page" : undefined}
           onSelect={e => {
             e.preventDefault();
             setTab(1);
           }}
         >
+          Cell
+        </UnderlineNav.Item>
+        <UnderlineNav.Item
+          icon={CpuIcon}
+          aria-current={tab === 2 ? "page" : undefined}
+          onSelect={e => {
+            e.preventDefault();
+            setTab(2);
+          }}
+        >
+          Outputs
+        </UnderlineNav.Item>
+        <UnderlineNav.Item
+          icon={AppsIcon}
+          aria-current={tab === 3 ? "page" : undefined}
+          onSelect={e => {
+            e.preventDefault();
+            setTab(3);
+          }}
+        >
           Lab App
         </UnderlineNav.Item>
       </UnderlineNav>
-      { tab === 0 &&
+      { tab === 0 && kernel &&
         <>
           <Notebook
             path="ipywidgets.ipynb"
             id="notebook-id"
             height="400px"
             extensions={[new CellSidebarExtension({ factory: CellSidebarRun })]}
-            startDefaultKernel
+            kernel={kernel}
           />
-          <hr/>
-          <CellComponents/>
-          <hr/>
-          <OutputsComponents/>
         </>
       }
-      { tab === 1 &&
+      { tab === 1 && kernel &&
+        <>
+          <CellComponents kernel={kernel} />
+        </>
+      }
+      { tab === 2 && kernel &&
+        <>
+          <OutputsComponents kernel={kernel} />
+        </>
+      }
+      { tab === 2 &&
         <>
           <JupyterLabHeadlessApp/>
         </>

@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import { useCellsStore, Cell, useJupyter } from "@datalayer/jupyter-react";
+import { useCellsStore, Cell, useJupyter, Kernel } from "@datalayer/jupyter-react";
 import CellToolbar from './CellToolbar';
 
 const CELL_ID = "cell-id-1"
@@ -49,8 +49,12 @@ const CellPreview = () => {
   )
 }
 
-const CellComponents = () => {
-  const { kernel } = useJupyter();
+type ICellComponentsProps = {
+  kernel: Kernel;
+}
+
+const CellComponents = (props: ICellComponentsProps) => {
+  const { kernel } = props;
   return (
     <>
       <CellPreview/>

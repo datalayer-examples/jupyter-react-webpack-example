@@ -29,7 +29,7 @@ const CellToolbar = (props: {cellId: string}) => {
           />
           <Text>Cell Toolbar</Text>
         </Box>
-        <Tooltip aria-label="Run the cell">
+        <Tooltip text="Run the cell">
           <IconButton
             size="small"
             variant="invisible"
@@ -38,7 +38,7 @@ const CellToolbar = (props: {cellId: string}) => {
             onClick={() => cellStore.execute()}
           />
         </Tooltip>
-        <Tooltip aria-label="Run the cell">
+        <Tooltip text="Run the cell">
           <IconButton
             size="small"
             variant="invisible"
