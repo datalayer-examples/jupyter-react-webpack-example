@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AppsIcon, CpuIcon } from '@primer/octicons-react';
 import { Box, UnderlineNav } from '@primer/react';
-import { useJupyter, JupyterReactTheme, Notebook, CellSidebarRun, CellSidebarExtension } from '@datalayer/jupyter-react';
+import { useJupyter, JupyterReactTheme, Notebook2, CellSidebarRun, CellSidebarExtension } from '@datalayer/jupyter-react';
 import CellComponents from './examples/cell/CellComponents';
 import OutputsComponents from './examples/outputs/OutputsComponents';
 import JupyterLabHeadlessApp from './examples/labapp/JupyterLabHeadlessApp';
@@ -10,7 +10,11 @@ import './App.css';
 
 const JupyterApp = () => {
   const [tab, setTab] = useState(0);
-  const { kernel } = useJupyter({ startDefaultKernel: true  });
+  const { defaultKernel, serviceManager } = useJupyter({
+    jupyterServerUrl: "https://oss.datalayer.run/api/jupyter-server",
+    jupyterServerToken: "60c1661cc408f978c309d04157af55c9588ff9557c9380e4fb50785750703da6",
+    startDefaultKernel: true,
+  });
   /*
   const { kernelManager, serviceManager } = useJupyter();
   const kernel1 = useMemo(() => {
@@ -70,34 +74,35 @@ const JupyterApp = () => {
           Lab App
         </UnderlineNav.Item>
       </UnderlineNav>
-      { tab === 0 && kernel &&
+      { tab === 0 && defaultKernel && serviceManager &&
         <>
-          <Notebook
+          <Notebook2
             path="ipywidgets.ipynb"
             id="notebook-id"
             height="400px"
+            kernelId={defaultKernel.id}
+            serviceManager={serviceManager}
             extensions={[new CellSidebarExtension({ factory: CellSidebarRun })]}
-            kernel={kernel}
           />
         </>
       }
-      { tab === 1 && kernel &&
+      { tab === 1 && defaultKernel &&
         <>
-          <CellComponents kernel={kernel} />
+          <CellComponents kernel={defaultKernel} />
         </>
       }
-      { tab === 2 && kernel &&
+      { tab === 2 && defaultKernel &&
         <>
-          <OutputsComponents kernel={kernel} />
+          <OutputsComponents kernel={defaultKernel} />
         </>
       }
-      { tab === 2 &&
+      { tab === 3 && defaultKernel &&
         <>
           <JupyterLabHeadlessApp/>
         </>
       }
     </>
-  )
+  ) 
 }
 
 const App = () => {
