@@ -6,7 +6,7 @@
 
 Example to showcase [Jupyter React](https://github.com/datalayer/jupyter-react) usage in a [Webpack](https://webpack.js.org) application.
 
-Read more on the [documentation pages](https://jupyter-ui.datalayer.tech/docs/examples/webpack).
+Read more on the [documentation pages](https://jupyter-ui.datalayer.tech/docs/integrations/webpack).
 
 <div align="center" style="text-align: center">
   <img alt="Jupyter React Gallery" src="https://datalayer-jupyter-examples.s3.amazonaws.com/jupyter-react-gallery.gif" />

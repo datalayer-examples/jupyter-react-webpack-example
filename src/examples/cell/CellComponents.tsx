@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import { useCellsStore, Cell, useJupyter, Kernel } from "@datalayer/jupyter-react";
+import { useCellsStore, Cell, Kernel } from "@datalayer/jupyter-react";
 import CellToolbar from './CellToolbar';
 
 const CELL_ID = "cell-id-1"
