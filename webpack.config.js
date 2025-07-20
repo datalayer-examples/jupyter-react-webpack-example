@@ -9,6 +9,9 @@ const IS_PRODUCTION = process.argv.indexOf('--mode=production') > -1;
 const mode = IS_PRODUCTION ? "production" : "development";
 const devtool = IS_PRODUCTION ? false : "inline-source-map";
 const minimize = IS_PRODUCTION ? true : false;
+const publicPath = IS_PRODUCTION
+  ? '/'
+  : 'http://localhost:3000/';
 
 const shimJS = path.resolve(__dirname, 'src', 'emptyshim.js');
 
@@ -38,7 +41,7 @@ module.exports = {
     minimize,
   },
   output: {
-    publicPath: "http://localhost:3000/",
+    publicPath,
     filename: '[name].[contenthash].jupyter-react-webpack-example.js',
   },
   resolve: {
