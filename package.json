@@ -19,8 +19,7 @@
     "url": "https://github.com/datalayer-examples/jupyter-react-webpack-example.git"
   },
   "scripts": {
-    "build": "gulp resources-to-lib && tsc && webpack",
-    "build:prod": "gulp resources-to-lib && tsc",
+    "build": "webpack --mode=production",
     "clean": "rimraf lib build dist tsconfig.tsbuildinfo",
     "start": "run-p -c 'start:*'",
     "start_:jupyter": "make start-jupyter-server",
