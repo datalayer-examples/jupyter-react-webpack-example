@@ -8,8 +8,8 @@ import { Jupyter, Lumino, JupyterLabApp, JupyterLabAppAdapter } from '@datalayer
 
 import * as lightThemeExtension from '@jupyterlab/theme-light-extension';
 import * as ipywidgetsExtension from '@jupyter-widgets/jupyterlab-manager';
-import * as plotlyExtension from 'jupyterlab-plotly/lib/jupyterlab-plugin';
-import * as mimePlotlyExtension from 'jupyterlab-plotly/lib/plotly-renderer';
+// import * as plotlyExtension from 'jupyterlab-plotly/lib/jupyterlab-plugin';
+// import * as mimePlotlyExtension from 'jupyterlab-plotly/lib/plotly-renderer';
 
 const height = "900px";
 
@@ -68,10 +68,10 @@ export const JupyterLabHeadlessAppExample = () => {
           plugins={[
             lightThemeExtension,
             ipywidgetsExtension,
-            plotlyExtension,
+            // plotlyExtension,
           ]}
           mimeRenderers={[
-            mimePlotlyExtension,
+            // mimePlotlyExtension,
           ]}
           headless
           onJupyterLab={onJupyterLab}
