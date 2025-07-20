@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AppsIcon, CpuIcon } from '@primer/octicons-react';
 import { Box, UnderlineNav } from '@primer/react';
 import { useJupyter, JupyterReactTheme, Notebook2, CellSidebarRun, CellSidebarExtension } from '@datalayer/jupyter-react';
@@ -15,6 +15,9 @@ const JupyterApp = () => {
     jupyterServerToken: "60c1661cc408f978c309d04157af55c9588ff9557c9380e4fb50785750703da6",
     startDefaultKernel: true,
   });
+  const extensions = useMemo(() => [
+    new CellSidebarExtension({ factory: CellSidebarRun })
+  ], []);
   /*
   const { kernelManager, serviceManager } = useJupyter();
   const kernel1 = useMemo(() => {
@@ -74,16 +77,18 @@ const JupyterApp = () => {
           Lab App
         </UnderlineNav.Item>
       </UnderlineNav>
-      { tab === 0 && defaultKernel && serviceManager &&
+      { tab === 0 && serviceManager && defaultKernel &&
         <>
           <Notebook2
             path="ipywidgets.ipynb"
             id="notebook-id"
             height="400px"
-            kernelId={defaultKernel.id}
             serviceManager={serviceManager}
-            extensions={[new CellSidebarExtension({ factory: CellSidebarRun })]}
+            kernelId={defaultKernel.id}
+            extensions={extensions}
           />
+        :
+          <div></div>
         </>
       }
       { tab === 1 && defaultKernel &&
