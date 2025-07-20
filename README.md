@@ -4,6 +4,8 @@
 
 # Jupyter React Webpack Example
 
+> Live example on https://jupyter-react-webpack-example.vercel.app
+
 Example to showcase [Jupyter React](https://github.com/datalayer/jupyter-react) usage in a [Webpack](https://webpack.js.org) application.
 
 Read more on the [documentation pages](https://jupyter-ui.datalayer.tech/docs/integrations/webpack).
